@@ -1,0 +1,13 @@
+﻿# Bỏ qua thư mục .vs
+.vs/
+
+# Bỏ qua file bin và obj (thường chứa file build)
+bin/
+obj/
+
+# Bỏ qua file tạm của Visual Studio
+*.suo
+*.user
+
+# Bỏ qua file package lock
+packages/
