@@ -2,11 +2,9 @@
 
 public class ProductRepository : GenericRepository<Product>, IProductRepository
 {
-    private readonly ElectronicStoreDbContext _context;
 
     public ProductRepository(ElectronicStoreDbContext context) : base(context)
     {
-        _context = context;
     }
 
     public async Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId)

@@ -2,7 +2,7 @@
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {
-    private readonly ElectronicStoreDbContext _context;
+    protected readonly ElectronicStoreDbContext _context;
     private readonly DbSet<T> _dbSet;
 
     public GenericRepository(ElectronicStoreDbContext context)
@@ -30,21 +30,18 @@ public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
         await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(T entity)
+    public void Update(T entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
         _context.Entry(entity).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(T entity)
+    public void Delete(T entity)
     {
         if (entity == null) throw new ArgumentNullException(nameof(entity));
         _context.Entry(entity).State = EntityState.Deleted;
-        await _context.SaveChangesAsync();
     }
 
     public async Task<bool> ExistsAsync(Guid id)
