@@ -1,10 +1,4 @@
-﻿using DAL.Entity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-
-namespace DAL.DBContext;
+﻿namespace DAL.DBContext;
 
 
 public partial class ElectronicStoreDbContext : DbContext

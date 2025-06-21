@@ -1,4 +1,8 @@
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
+
+// Thêm các dịch vụ DAL
+
+builder.Services.AddDataAccessServices(builder.Configuration);
 
 // Add services to the container.
 

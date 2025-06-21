@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DAL.Entity;
+﻿namespace DAL.Entity;
 
 public partial class CartItem
 {
