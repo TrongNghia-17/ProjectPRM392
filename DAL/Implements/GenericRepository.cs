@@ -1,4 +1,4 @@
-﻿namespace DAL.Implements;
+﻿namespace ProjectPRM392.Implements;
 
 public class GenericRepository<T> : IGenericRepository<T> where T : class
 {

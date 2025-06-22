@@ -1,4 +1,4 @@
-﻿namespace DAL.DBContext;
+﻿namespace ProjectPRM392.DBContext;
 
 
 public partial class ElectronicStoreDbContext : DbContext

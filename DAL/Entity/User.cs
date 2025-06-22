@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Entity;
+namespace ProjectPRM392.Entity;
 
 public partial class User
 {

@@ -1,21 +1,8 @@
-﻿using Microsoft.OpenApi.Models;
-
-var builder = WebApplication.CreateBuilder(args);
+﻿var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDALServices(builder.Configuration);
 builder.Services.AddBLLServices(builder.Configuration);
-
-builder.Services.AddControllers();
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Electronic Store API",
-        Version = "v1",
-        Description = "API for managing products, orders, and users in the Electronic Store."
-    });
-});
+builder.Services.AddProjectPRM392Services(builder.Configuration);
 
 var app = builder.Build();
 

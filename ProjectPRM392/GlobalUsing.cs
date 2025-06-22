@@ -1,6 +1,6 @@
-﻿global using DAL.Extensions;
-global using BLL.Extensions;
+﻿global using BLL.Extensions;
 global using BLL.Interfaces;
-global using DAL.Entity;
 global using Microsoft.AspNetCore.Mvc;
+global using ProjectPRM392.Extensions;
+global using Microsoft.OpenApi.Models;
 

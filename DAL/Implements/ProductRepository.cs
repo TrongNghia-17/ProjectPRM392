@@ -1,4 +1,4 @@
-﻿namespace DAL.Implements;
+﻿namespace ProjectPRM392.Implements;
 
 public class ProductRepository(ElectronicStoreDbContext context) : GenericRepository<Product>(context), IProductRepository
 {

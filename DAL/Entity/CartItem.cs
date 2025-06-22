@@ -1,4 +1,4 @@
-﻿namespace DAL.Entity;
+﻿namespace ProjectPRM392.Entity;
 
 public partial class CartItem
 {

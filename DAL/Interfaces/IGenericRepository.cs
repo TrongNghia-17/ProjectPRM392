@@ -1,4 +1,4 @@
-﻿namespace DAL.Interfaces;
+﻿namespace ProjectPRM392.Interfaces;
 
 public interface IGenericRepository<T> where T : class
 {

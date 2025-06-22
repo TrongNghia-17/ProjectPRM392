@@ -1,4 +1,4 @@
-﻿namespace DAL.Interfaces;
+﻿namespace ProjectPRM392.Interfaces;
 
 public interface IProductRepository : IGenericRepository<Product>
 {

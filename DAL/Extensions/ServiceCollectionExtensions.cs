@@ -1,4 +1,4 @@
-﻿namespace DAL.Extensions;
+﻿namespace ProjectPRM392.Extensions;
 
 public static class ServiceCollectionExtensions
 {
