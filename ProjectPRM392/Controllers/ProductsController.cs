@@ -1,6 +1,6 @@
 ﻿using BLL.DTOs.ProductDTO;
 
-namespace DAL.Controllers;
+namespace ProjectPRM392.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -19,6 +19,31 @@ public class ProductsController(IProductService productService) : ControllerBase
         catch (KeyNotFoundException ex)
         {
             return NotFound(ex.Message);
+        }
+    }
+
+    [HttpGet("category/{categoryId}")]
+    public async Task<IActionResult> GetByCategoryId(Guid categoryId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    {
+        try
+        {
+            var result = await _productService.GetByCategoryIdAsync(categoryId, pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.Products,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
     }
 

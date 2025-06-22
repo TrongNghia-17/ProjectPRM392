@@ -4,11 +4,23 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
 {
     private readonly ElectronicStoreDbContext _context = context;
 
-    public async Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId)
+    public async Task<(IEnumerable<Product> Products, int TotalCount)> GetByCategoryIdAsync(Guid categoryId, int pageIndex, int pageSize)
     {
-        return await _context.Products
-            .Where(p => p.CategoryId == categoryId)
+        if (categoryId == Guid.Empty)
+        {
+            throw new ArgumentException("Category ID cannot be empty.", nameof(categoryId));
+        }
+
+        var query = _context.Products
+            .Where(p => p.CategoryId == categoryId);
+
+        var totalCount = await query.CountAsync();
+        var products = await query
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        return (products, totalCount);
     }
 
     public async Task<(IEnumerable<Product> Products, int TotalCount)> SearchByNameAsync(string name, int pageIndex, int pageSize)

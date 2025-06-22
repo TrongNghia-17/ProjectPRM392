@@ -1,15 +1,36 @@
-﻿using BLL.DTOs.ProductDTO;
-
-namespace BLL.Implements;
+﻿namespace BLL.Implements;
 
 public class ProductService(IProductRepository productRepository, IMapper mapper) : IProductService
 {
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId)
+    public async Task<PagedProductResponse> GetByCategoryIdAsync(Guid categoryId, int pageIndex, int pageSize)
     {
-        return await _productRepository.GetByCategoryIdAsync(categoryId);
+        if (categoryId == Guid.Empty)
+        {
+            throw new ArgumentException("Category ID cannot be empty.", nameof(categoryId));
+        }
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
+
+        var (products, totalCount) = await _productRepository.GetByCategoryIdAsync(categoryId, pageIndex, pageSize);
+        var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
+
+        return new PagedProductResponse
+        {
+            Products = productResponses,
+            TotalCount = totalCount,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        };
     }
 
     public async Task<PagedProductResponse> SearchByNameAsync(string name, int pageIndex, int pageSize)
