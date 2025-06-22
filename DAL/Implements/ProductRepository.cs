@@ -59,16 +59,31 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
             .AnyAsync(p => p.Name.ToLower() == name.ToLower());
     }
 
-    public async Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice)
+    public async Task<(IEnumerable<Product> Products, int TotalCount)> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice, int pageIndex, int pageSize)
     {
         if (minPrice < 0 || maxPrice < 0 || minPrice > maxPrice)
         {
             throw new ArgumentException("Invalid price range.");
         }
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
 
-        return await _context.Products
-            .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
+        var query = _context.Products
+            .Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+
+        var totalCount = await query.CountAsync();
+        var products = await query
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
             .ToListAsync();
+
+        return (products, totalCount);
     }
 
     public async Task AddAsync(Product product)

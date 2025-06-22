@@ -57,13 +57,32 @@ public class ProductService(IProductRepository productRepository, IMapper mapper
         };
     }
 
-    public async Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice)
+    public async Task<PagedProductResponse> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice, int pageIndex, int pageSize)
     {
         if (minPrice < 0 || maxPrice < 0 || minPrice > maxPrice)
         {
             throw new ArgumentException("Invalid price range.");
         }
-        return await _productRepository.GetByPriceRangeAsync(minPrice, maxPrice);
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
+
+        var (products, totalCount) = await _productRepository.GetByPriceRangeAsync(minPrice, maxPrice, pageIndex, pageSize);
+        var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
+
+        return new PagedProductResponse
+        {
+            Products = productResponses,
+            TotalCount = totalCount,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        };
     }
 
     public async Task<ProductResponse> CreateAsync(ProductRequest request)
