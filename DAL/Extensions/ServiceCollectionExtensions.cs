@@ -1,6 +1,6 @@
-﻿using ProjectPRM392.Implements;
+﻿using DAL.Implements;
 
-namespace ProjectPRM392.Extensions;
+namespace DAL.Extensions;
 
 public static class ServiceCollectionExtensions
 {

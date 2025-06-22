@@ -1,4 +1,6 @@
-﻿namespace BLL.Implements;
+﻿using BLL.DTOs.ProductDTO;
+
+namespace BLL.Implements;
 
 public class ProductService(IProductRepository productRepository, IMapper mapper) : IProductService
 {
@@ -10,9 +12,28 @@ public class ProductService(IProductRepository productRepository, IMapper mapper
         return await _productRepository.GetByCategoryIdAsync(categoryId);
     }
 
-    public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
+    public async Task<PagedProductResponse> SearchByNameAsync(string name, int pageIndex, int pageSize)
     {
-        return await _productRepository.SearchByNameAsync(name);
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
+
+        var (products, totalCount) = await _productRepository.SearchByNameAsync(name, pageIndex, pageSize);
+        var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
+
+        return new PagedProductResponse
+        {
+            Products = productResponses,
+            TotalCount = totalCount,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        };
     }
 
     public async Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice)

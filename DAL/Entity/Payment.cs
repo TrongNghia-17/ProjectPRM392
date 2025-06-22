@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ProjectPRM392.Entity;
+namespace DAL.Entity;
 
 public partial class Payment
 {

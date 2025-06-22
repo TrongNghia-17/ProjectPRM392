@@ -1,4 +1,4 @@
-﻿namespace BLL.DTOs;
+﻿namespace BLL.DTOs.ProductDTO;
 
 public class ProductResponse
 {

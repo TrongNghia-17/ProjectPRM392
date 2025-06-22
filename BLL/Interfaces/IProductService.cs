@@ -1,9 +1,11 @@
-﻿namespace BLL.Interfaces;
+﻿using BLL.DTOs.ProductDTO;
+
+namespace BLL.Interfaces;
 
 public interface IProductService
 {
     Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId);
-    Task<IEnumerable<Product>> SearchByNameAsync(string name);
+    Task<PagedProductResponse> SearchByNameAsync(string name, int pageIndex, int pageSize);
     Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
     Task<ProductResponse> CreateAsync(ProductRequest request);
     Task DeleteAsync(Guid id);

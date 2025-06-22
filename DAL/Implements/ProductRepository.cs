@@ -1,4 +1,4 @@
-﻿namespace ProjectPRM392.Implements;
+﻿namespace DAL.Implements;
 
 public class ProductRepository(ElectronicStoreDbContext context) : IProductRepository
 {
@@ -11,17 +11,29 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
+    public async Task<(IEnumerable<Product> Products, int TotalCount)> SearchByNameAsync(string name, int pageIndex, int pageSize)
     {
-        //if (string.IsNullOrWhiteSpace(name))
-        //{
-        //    return await GetAllAsync();
-        //}
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            var allProducts = _context.Products.AsQueryable();
+            var totalCount = await allProducts.CountAsync();
+            var products = await allProducts
+                .Skip(pageIndex * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return (products, totalCount);
+        }
 
-        //return await _context.Products
-        //    .Where(p => p.Name.ToLower().Contains(name.ToLower()))
-        //    .ToListAsync();
-        throw new NotImplementedException();
+        var query = _context.Products
+            .Where(p => p.Name.ToLower().Contains(name.ToLower()));
+
+        var total = await query.CountAsync();
+        var result = await query
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (result, total);
     }
 
     public async Task<bool> ExistsByNameAsync(string name)

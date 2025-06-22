@@ -1,4 +1,4 @@
-﻿using ProjectPRM392.Extensions;
+﻿using DAL.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

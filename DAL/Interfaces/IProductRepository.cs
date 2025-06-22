@@ -1,9 +1,9 @@
-﻿namespace ProjectPRM392.Interfaces;
+﻿namespace DAL.Interfaces;
 
 public interface IProductRepository
 {
     Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId);
-    Task<IEnumerable<Product>> SearchByNameAsync(string name);
+    Task<(IEnumerable<Product> Products, int TotalCount)> SearchByNameAsync(string name, int pageIndex, int pageSize);
     Task<bool> ExistsByNameAsync(string name);
     Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice);
     Task AddAsync(Product product);

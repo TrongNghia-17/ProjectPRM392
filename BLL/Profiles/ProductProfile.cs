@@ -1,4 +1,6 @@
-﻿namespace BLL.Profiles;
+﻿using BLL.DTOs.ProductDTO;
+
+namespace BLL.Profiles;
 
 public class ProductProfile : Profile
 {

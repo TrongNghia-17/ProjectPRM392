@@ -1,4 +1,6 @@
-﻿namespace ProjectPRM392.Controllers;
+﻿using BLL.DTOs.ProductDTO;
+
+namespace DAL.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -21,10 +23,28 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpGet("search")]
-    public async Task<IActionResult> SearchByName([FromQuery] string name)
+    public async Task<IActionResult> SearchByName([FromQuery] string? name, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
     {
-        var products = await _productService.SearchByNameAsync(name);
-        return Ok(products);
+        try
+        {
+            var result = await _productService.SearchByNameAsync(name ?? string.Empty, pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.Products,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
+        }
     }
 
     [HttpPost]
