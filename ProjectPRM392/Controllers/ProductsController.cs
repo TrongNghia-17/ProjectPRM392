@@ -1,6 +1,4 @@
-﻿using BLL.DTOs.ProductDTO;
-
-namespace ProjectPRM392.Controllers;
+﻿namespace ProjectPRM392.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -83,6 +81,31 @@ public class ProductsController(IProductService productService) : ControllerBase
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("price-range")]
+    public async Task<IActionResult> GetByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    {
+        try
+        {
+            var result = await _productService.GetByPriceRangeAsync(minPrice, maxPrice, pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.Products,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
     }
 
