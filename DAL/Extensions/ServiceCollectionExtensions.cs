@@ -1,4 +1,6 @@
-﻿namespace ProjectPRM392.Extensions;
+﻿using ProjectPRM392.Implements;
+
+namespace ProjectPRM392.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -7,7 +9,6 @@ public static class ServiceCollectionExtensions
         services.AddDbContext<ElectronicStoreDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
-        services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IProductRepository, ProductRepository>();
 
         return services;

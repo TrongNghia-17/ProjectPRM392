@@ -1,7 +1,9 @@
 ﻿namespace ProjectPRM392.Implements;
 
-public class ProductRepository(ElectronicStoreDbContext context) : GenericRepository<Product>(context), IProductRepository
+public class ProductRepository(ElectronicStoreDbContext context) : IProductRepository
 {
+    private readonly ElectronicStoreDbContext _context = context;
+
     public async Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId)
     {
         return await _context.Products
@@ -11,14 +13,15 @@ public class ProductRepository(ElectronicStoreDbContext context) : GenericReposi
 
     public async Task<IEnumerable<Product>> SearchByNameAsync(string name)
     {
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            return await GetAllAsync();
-        }
+        //if (string.IsNullOrWhiteSpace(name))
+        //{
+        //    return await GetAllAsync();
+        //}
 
-        return await _context.Products
-            .Where(p => p.Name.ToLower().Contains(name.ToLower()))
-            .ToListAsync();
+        //return await _context.Products
+        //    .Where(p => p.Name.ToLower().Contains(name.ToLower()))
+        //    .ToListAsync();
+        throw new NotImplementedException();
     }
 
     public async Task<bool> ExistsByNameAsync(string name)
@@ -42,5 +45,39 @@ public class ProductRepository(ElectronicStoreDbContext context) : GenericReposi
         return await _context.Products
             .Where(p => p.Price >= minPrice && p.Price <= maxPrice)
             .ToListAsync();
+    }
+
+    public async Task AddAsync(Product product)
+    {
+        if (product == null)
+        {
+            throw new ArgumentNullException(nameof(product));
+        }
+
+        await _context.Products.AddAsync(product);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<Product?> GetByIdAsync(Guid id)
+    {
+        return await _context.Products.FindAsync(id);
+    }
+
+    public async Task DeleteAsync(Guid id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (product == null)
+        {
+            throw new KeyNotFoundException($"Product with ID {id} does not exist.");
+        }
+
+        _context.Products.Remove(product);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task UpdateAsync(Product product)
+    {
+        _context.Products.Update(product);
+        await _context.SaveChangesAsync();
     }
 }

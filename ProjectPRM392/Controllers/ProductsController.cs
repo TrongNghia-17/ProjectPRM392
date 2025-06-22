@@ -1,17 +1,10 @@
-﻿using BLL.DTOs;
-
-namespace ProjectPRM392.Controllers;
+﻿namespace ProjectPRM392.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductsController : ControllerBase
+public class ProductsController(IProductService productService) : ControllerBase
 {
-    private readonly IProductService _productService;
-
-    public ProductsController(IProductService productService)
-    {
-        _productService = productService;
-    }
+    private readonly IProductService _productService = productService;
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(Guid id)
@@ -35,16 +28,53 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateProductDto productDto)
+    public async Task<IActionResult> Create([FromBody] ProductRequest request)
     {
         try
         {
-            var product = await _productService.CreateAsync(productDto);
-            return CreatedAtAction(nameof(GetById), new { id = product.ProductId }, productDto);
+            var product = await _productService.CreateAsync(request);
+            return CreatedAtAction(nameof(GetById), new { id = product.ProductId }, request);
         }
         catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        try
+        {
+            await _productService.DeleteAsync(id);
+            return Ok(new { Message = $"Product with ID {id} has been deleted successfully.", Status = "Success" });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] ProductRequest request)
+    {
+        try
+        {
+            if (request == null)
+            {
+                return BadRequest(new { Message = "Request body is null.", Status = "Error" });
+            }
+
+            var product = await _productService.UpdateAsync(id, request);
+            return Ok(new { Message = $"Product with ID {id} has been updated successfully.", Status = "Success", Data = product });
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(new { Message = ex.Message, Status = "Error" });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
     }
 }

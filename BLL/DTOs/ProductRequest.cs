@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace BLL.DTOs;
 
-namespace BLL.DTOs;
-
-public class CreateProductDto
+public class ProductRequest
 {
     [Required(ErrorMessage = "Tên sản phẩm là bắt buộc.")]
     [StringLength(100, ErrorMessage = "Tên sản phẩm không được vượt quá 100 ký tự.")]

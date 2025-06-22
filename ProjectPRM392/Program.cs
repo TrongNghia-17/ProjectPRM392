@@ -1,4 +1,6 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿using ProjectPRM392.Extensions;
+
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDALServices(builder.Configuration);
 builder.Services.AddBLLServices(builder.Configuration);
