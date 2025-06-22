@@ -1,12 +1,7 @@
 ﻿namespace DAL.Implements;
 
-public class ProductRepository : GenericRepository<Product>, IProductRepository
+public class ProductRepository(ElectronicStoreDbContext context) : GenericRepository<Product>(context), IProductRepository
 {
-
-    public ProductRepository(ElectronicStoreDbContext context) : base(context)
-    {
-    }
-
     public async Task<IEnumerable<Product>> GetByCategoryIdAsync(Guid categoryId)
     {
         return await _context.Products
@@ -22,8 +17,19 @@ public class ProductRepository : GenericRepository<Product>, IProductRepository
         }
 
         return await _context.Products
-            .Where(p => p.Name.Contains(name, StringComparison.OrdinalIgnoreCase))
+            .Where(p => p.Name.ToLower().Contains(name.ToLower()))
             .ToListAsync();
+    }
+
+    public async Task<bool> ExistsByNameAsync(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return false;
+        }
+
+        return await _context.Products
+            .AnyAsync(p => p.Name.ToLower() == name.ToLower());
     }
 
     public async Task<IEnumerable<Product>> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice)

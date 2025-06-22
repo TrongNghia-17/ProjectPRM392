@@ -1,4 +1,6 @@
-﻿namespace ProjectPRM392.Controllers;
+﻿using BLL.DTOs;
+
+namespace ProjectPRM392.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -33,12 +35,12 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] Product product)
+    public async Task<IActionResult> Create([FromBody] CreateProductDto productDto)
     {
         try
         {
-            await _productService.CreateAsync(product);
-            return CreatedAtAction(nameof(GetById), new { id = product.ProductId }, product);
+            var product = await _productService.CreateAsync(productDto);
+            return CreatedAtAction(nameof(GetById), new { id = product.ProductId }, productDto);
         }
         catch (ArgumentException ex)
         {

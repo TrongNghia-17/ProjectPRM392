@@ -5,3 +5,4 @@ global using Microsoft.Extensions.DependencyInjection;
 global using DAL.DBContext;
 global using DAL.Entity;
 global using DAL.Interfaces;
+global using BLL.DTOs;

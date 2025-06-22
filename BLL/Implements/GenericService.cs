@@ -2,8 +2,8 @@
 
 public class GenericService<T> : IGenericService<T> where T : class
 {
-    private readonly IGenericRepository<T> _repository;
-    private readonly ElectronicStoreDbContext _context;
+    protected readonly IGenericRepository<T> _repository;
+    protected readonly ElectronicStoreDbContext _context;
 
     public GenericService(IGenericRepository<T> repository, ElectronicStoreDbContext context)
     {
