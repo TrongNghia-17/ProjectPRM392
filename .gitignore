@@ -1,5 +1,6 @@
 ﻿# Bỏ qua thư mục .vs
 .vs/
+.appsettings.json/
 
 # Bỏ qua file bin và obj (thường chứa file build)
 bin/
