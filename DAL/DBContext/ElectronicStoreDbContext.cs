@@ -45,7 +45,7 @@ public partial class ElectronicStoreDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=ElectronicStoreDB;Username=postgres;Password=postgres;")
+            optionsBuilder.UseNpgsql(GetConnectionString("DefaultConnection"))
                           .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
     }
