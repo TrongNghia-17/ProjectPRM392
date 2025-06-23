@@ -1,13 +1,14 @@
-﻿using DAL.Implements;
-
-namespace DAL.Extensions;
+﻿namespace DAL.Extensions;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddDALServices(this IServiceCollection services, IConfiguration configuration)
     {
+        //services.AddDbContext<ElectronicStoreDbContext>(options =>
+        //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         services.AddDbContext<ElectronicStoreDbContext>(options =>
-            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+            options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
+                x => x.EnableRetryOnFailure()));
 
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
