@@ -1,9 +1,13 @@
 ﻿namespace BLL.Implements;
 
-public class CartItemService(IProductRepository productRepository, ICartItemRepository cartItemRepository) : ICartItemService
+public class CartItemService
+    (IProductRepository productRepository, 
+    ICartItemRepository cartItemRepository,
+    IMapper mapper) : ICartItemService
 {
     private readonly IProductRepository _productRepository = productRepository;
     private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
+    private readonly IMapper _mapper = mapper;
 
     public async Task AddAsync(Guid userId, Guid productId, int quantity)
     {
@@ -83,5 +87,27 @@ public class CartItemService(IProductRepository productRepository, ICartItemRepo
         //}
 
         //await _productRepository.UpdateAsync(product);
+    }
+
+    public async Task<PagedCartItemResponse> GetCartItemsByUserIdAsync(Guid userId, int pageIndex, int pageSize)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+        if (pageIndex < 0)
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        if (pageSize <= 0)
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+
+        var (cartItems, totalCount) = await _cartItemRepository.GetByUserIdAsync(userId, pageIndex, pageSize);
+        var cartItemResponses = _mapper.Map<IEnumerable<CartItemResponse>>(cartItems);
+
+        return new PagedCartItemResponse
+        {
+            CartItems = cartItemResponses,
+            TotalCount = totalCount,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        };
     }
 }

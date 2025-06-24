@@ -1,6 +1,5 @@
 ﻿var builder = WebApplication.CreateBuilder(args);
 
-// Lấy chuỗi kết nối từ biến môi trường, nếu không có thì dùng appsettings.json
 var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING_ELECTRONICSTOREDB")
     ?? builder.Configuration.GetConnectionString("DefaultConnection");
 

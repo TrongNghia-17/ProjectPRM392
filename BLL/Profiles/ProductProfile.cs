@@ -1,6 +1,4 @@
-﻿using BLL.DTOs.ProductsDTO;
-
-namespace BLL.Profiles;
+﻿namespace BLL.Profiles;
 
 public class ProductProfile : Profile
 {
@@ -11,10 +9,10 @@ public class ProductProfile : Profile
         CreateMap<ProductRequest, Product>()
             .ForMember(dest => dest.ProductId, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore());
-        //CreateMap<Product, ProductResponse>();
-        //CreateMap<ProductRequest, Product>()
-        //    .ForMember(dest => dest.ProductId, opt => opt.Ignore())
-        //    .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => DateTime.UtcNow)) // Không áp dụng cho update
-        //    .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
+        CreateMap<CartItem, CartItemResponse>()
+            .ForMember(dest => dest.ProductName, opt => opt.MapFrom(src => src.Product.Name))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.Product.Price))
+            .ForMember(dest => dest.AddedAt, opt => opt.MapFrom(src => src.AddedAt.ToUniversalTime()));
     }
 }

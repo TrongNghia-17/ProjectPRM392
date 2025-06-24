@@ -15,11 +15,6 @@ public class CartItemRepository(ElectronicStoreDbContext context) : ICartItemRep
         if (cartItem == null)
             throw new ArgumentNullException(nameof(cartItem));
 
-        //if (cartItem.AddedAt.Kind != DateTimeKind.Utc)
-        //{
-        //    cartItem.AddedAt = DateTime.SpecifyKind(cartItem.AddedAt, DateTimeKind.Utc);
-        //}
-
         await _context.CartItems.AddAsync(cartItem);
         await _context.SaveChangesAsync();
     }
@@ -28,11 +23,6 @@ public class CartItemRepository(ElectronicStoreDbContext context) : ICartItemRep
     {
         if (cartItem == null)
             throw new ArgumentNullException(nameof(cartItem));
-
-        //if (cartItem.AddedAt.Kind != DateTimeKind.Utc)
-        //{
-        //    cartItem.AddedAt = DateTime.SpecifyKind(cartItem.AddedAt, DateTimeKind.Utc);
-        //}
 
         _context.CartItems.Update(cartItem);
         await _context.SaveChangesAsync();
@@ -62,10 +52,6 @@ public class CartItemRepository(ElectronicStoreDbContext context) : ICartItemRep
             throw new InvalidOperationException($"Cannot decrease {decreaseAmount} items. Current quantity is {cartItem.Quantity}.");
 
         cartItem.Quantity -= decreaseAmount;
-        //if (cartItem.AddedAt.Kind != DateTimeKind.Utc)
-        //{
-        //    cartItem.AddedAt = DateTime.SpecifyKind(cartItem.AddedAt, DateTimeKind.Utc);
-        //}
 
         if (cartItem.Quantity == 0)
         {
@@ -76,5 +62,27 @@ public class CartItemRepository(ElectronicStoreDbContext context) : ICartItemRep
             _context.CartItems.Update(cartItem);
         }
         await _context.SaveChangesAsync();
+    }
+
+    public async Task<(IEnumerable<CartItem> CartItems, int TotalCount)> GetByUserIdAsync(Guid userId, int pageIndex, int pageSize)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+        if (pageIndex < 0)
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        if (pageSize <= 0)
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+
+        var query = _context.CartItems
+            .Where(ci => ci.UserId == userId)
+            .Include(ci => ci.Product); 
+
+        var totalCount = await query.CountAsync();
+        var cartItems = await query
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (cartItems, totalCount);
     }
 }

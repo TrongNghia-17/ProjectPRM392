@@ -49,4 +49,29 @@ public class CartItemController(ICartItemService cartItemService) : ControllerBa
             return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
     }
+
+    [HttpGet("cart/{userId}")]
+    public async Task<IActionResult> GetCartItemsByUserId(Guid userId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    {
+        try
+        {
+            var result = await _cartItemService.GetCartItemsByUserIdAsync(userId, pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.CartItems,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
+        }
+    }
 }
