@@ -2,7 +2,7 @@
 
 [Route("api/[controller]")]
 [ApiController]
-public class CartItemController(ICartItemService cartItemService) : ControllerBase
+public class CartItemsController(ICartItemService cartItemService) : ControllerBase
 {
     private readonly ICartItemService _cartItemService = cartItemService;
 

@@ -10,10 +10,10 @@ public static class ServiceCollectionExtensions
 
         services.AddDbContext<ElectronicStoreDbContext>(options =>
             options.UseNpgsql(connectionString, x => x.EnableRetryOnFailure()));
-
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IOrderRepository, OrderRepository>();
         services.AddScoped<ICartItemRepository, CartItemRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         return services;
     }
 }
