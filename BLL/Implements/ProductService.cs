@@ -1,9 +1,12 @@
-﻿namespace BLL.Implements;
+﻿using BLL.DTOs.ProductsDTO;
 
-public class ProductService(IProductRepository productRepository, IMapper mapper) : IProductService
+namespace BLL.Implements;
+
+public class ProductService(IProductRepository productRepository, IMapper mapper, ICartItemRepository cartItemRepository) : IProductService
 {
     private readonly IProductRepository _productRepository = productRepository;
     private readonly IMapper _mapper = mapper;
+    private readonly ICartItemRepository _cartItemRepository = cartItemRepository;
 
     public async Task<PagedProductResponse> GetByCategoryIdAsync(Guid categoryId, int pageIndex, int pageSize)
     {
@@ -161,5 +164,5 @@ public class ProductService(IProductRepository productRepository, IMapper mapper
         var response = _mapper.Map<ProductResponse>(updatedProduct);
 
         return response;
-    }
+    }    
 }

@@ -1,4 +1,4 @@
-﻿namespace BLL.DTOs.ProductDTO;
+﻿namespace BLL.DTOs.ProductsDTO;
 
 public class PagedProductResponse
 {

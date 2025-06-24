@@ -1,4 +1,4 @@
-﻿using BLL.DTOs.ProductDTO;
+﻿using BLL.DTOs.ProductsDTO;
 
 namespace BLL.Profiles;
 

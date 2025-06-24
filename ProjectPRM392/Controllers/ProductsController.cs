@@ -144,5 +144,5 @@ public class ProductsController(IProductService productService) : ControllerBase
         {
             return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
-    }
+    }    
 }

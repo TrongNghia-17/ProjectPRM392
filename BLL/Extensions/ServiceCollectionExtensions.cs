@@ -7,6 +7,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IProductService, ProductService>();
         services.AddAutoMapper(typeof(ProductProfile));
         services.AddScoped<IOrderService, OrderService>();
+        services.AddScoped<ICartItemService, CartItemService>();
         return services;
     }
 }

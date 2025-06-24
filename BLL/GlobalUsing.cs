@@ -1,5 +1,5 @@
 ﻿global using AutoMapper;
-global using BLL.DTOs.ProductDTO;
+global using BLL.DTOs.ProductsDTO;
 global using BLL.Implements;
 global using BLL.Interfaces;
 global using BLL.Profiles;

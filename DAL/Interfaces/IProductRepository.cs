@@ -10,4 +10,5 @@ public interface IProductRepository
     Task<Product?> GetByIdAsync(Guid id);
     Task DeleteAsync(Guid id);
     Task UpdateAsync(Product product);
+    Task<int> GetQuantityByIdAsync(Guid productId);
 }

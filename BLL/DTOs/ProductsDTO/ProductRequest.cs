@@ -1,4 +1,4 @@
-﻿namespace BLL.DTOs.ProductDTO;
+﻿namespace BLL.DTOs.ProductsDTO;
 
 public class ProductRequest
 {
@@ -13,12 +13,8 @@ public class ProductRequest
     [Range(0, double.MaxValue, ErrorMessage = "Giá sản phẩm phải lớn hơn hoặc bằng 0.")]
     public decimal Price { get; set; }
 
-    [Required(ErrorMessage = "Số lượng là bắt buộc.")]
-    [Range(0, int.MaxValue, ErrorMessage = "Số lượng phải lớn hơn hoặc bằng 0.")]
-    public int Quantity { get; set; }
-
     [Range(0, 10, ErrorMessage = "Số lượng tồn kho phải từ 0 đến 10.")]
-    public int Stock { get; set; }
+    public int Quantity { get; set; }    
 
     [Url(ErrorMessage = "URL hình ảnh không hợp lệ.")]
     public string? ImageUrl { get; set; }

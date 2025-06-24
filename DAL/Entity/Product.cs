@@ -12,8 +12,6 @@ public partial class Product
 
     public int Quantity { get; set; }
 
-    public int Stock { get; set; }
-
     public string? ImageUrl { get; set; }
 
     public DateTime CreatedAt { get; set; }

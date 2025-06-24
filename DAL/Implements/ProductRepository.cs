@@ -119,4 +119,13 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
         _context.Products.Update(product);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<int> GetQuantityByIdAsync(Guid productId)
+    {
+        var product = await _context.Products
+            .Where(p => p.ProductId == productId)
+            .Select(p => p.Quantity)
+            .FirstOrDefaultAsync();
+        return product;
+    }
 }

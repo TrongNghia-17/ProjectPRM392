@@ -32,6 +32,11 @@ public partial class ElectronicStoreDbContext : DbContext
 
             entity.Property(e => e.CartItemId).ValueGeneratedNever();
             entity.Property(e => e.AddedAt).HasColumnType("datetime");
+            entity.Property(e => e.AddedAt)
+                  .HasColumnType("timestamp with time zone")
+                  .HasConversion(
+                      v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
+                      v => DateTime.SpecifyKind(v, DateTimeKind.Utc));                                                                                  
 
             entity.HasOne(d => d.Product).WithMany(p => p.CartItems)
                 .HasForeignKey(d => d.ProductId)
@@ -113,8 +118,7 @@ public partial class ElectronicStoreDbContext : DbContext
             entity.Property(e => e.CreatedAt).HasColumnType("datetime");
             entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(200);
-            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.Stock).HasColumnType("integer");
+            entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");            
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
