@@ -1,6 +1,4 @@
 ﻿namespace DAL.DBContext;
-
-
 public partial class ElectronicStoreDbContext : DbContext
 {
     public ElectronicStoreDbContext()
@@ -24,31 +22,7 @@ public partial class ElectronicStoreDbContext : DbContext
 
     public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-
-
-    //public static string GetConnectionString(string connectionStringName)
-    //{
-    //    var config = new ConfigurationBuilder()
-    //        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-    //        .AddJsonFile("appsettings.json")
-    //        .Build();
-
-    //    string connectionString = config.GetConnectionString(connectionStringName);
-    //    return connectionString;
-    //}
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection")).UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //{
-    //    if (!optionsBuilder.IsConfigured)
-    //    {
-    //        optionsBuilder.UseNpgsql(GetConnectionString("DefaultConnection"))
-    //                      .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    //    }
-    //}
+    public virtual DbSet<User> Users { get; set; }    
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -140,6 +114,7 @@ public partial class ElectronicStoreDbContext : DbContext
             entity.Property(e => e.ImageUrl).HasMaxLength(500);
             entity.Property(e => e.Name).HasMaxLength(200);
             entity.Property(e => e.Price).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Stock).HasColumnType("integer");
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)

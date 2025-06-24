@@ -12,6 +12,8 @@ public class ProductResponse
 
     public int Quantity { get; set; }
 
+    public int Stock { get; set; }
+
     public string? ImageUrl { get; set; }
 
     public bool IsActive { get; set; }
