@@ -53,4 +53,34 @@ public class UserRepository(ElectronicStoreDbContext context) : IUserRepository
 
         return (users, totalCount);
     }
+
+    public async Task DeleteAsync(User user)
+    {
+        if (user == null)
+            throw new ArgumentNullException(nameof(user));
+
+        // Xóa các quan hệ liên quan (CartItems, Orders) để tránh lỗi ràng buộc khóa ngoại
+        var cartItems = await _context.CartItems.Where(c => c.UserId == user.UserId).ToListAsync();
+        if (cartItems.Any())
+        {
+            _context.CartItems.RemoveRange(cartItems);
+        }
+
+        var orders = await _context.Orders.Where(o => o.UserId == user.UserId).ToListAsync();
+        if (orders.Any())
+        {
+            foreach (var order in orders)
+            {
+                var orderDetails = await _context.OrderItems.Where(o => o.OrderId == order.OrderId).ToListAsync();
+                if (orderDetails.Any())
+                {
+                    _context.OrderItems.RemoveRange(orderDetails);
+                }
+            }
+            _context.Orders.RemoveRange(orders);
+        }
+
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
+    }
 }

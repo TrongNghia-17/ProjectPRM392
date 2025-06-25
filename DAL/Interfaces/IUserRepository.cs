@@ -7,4 +7,5 @@ public interface IUserRepository
     Task AddAsync(User user);
     Task UpdateAsync(User user);
     Task<(IEnumerable<User> Users, int TotalCount)> GetAllAsync(int pageIndex, int pageSize);
+    Task DeleteAsync(User user);
 }

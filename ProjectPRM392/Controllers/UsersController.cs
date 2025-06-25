@@ -2,38 +2,54 @@
 
 [Route("api/[controller]")]
 [ApiController]
-public class UsersController(IUserService userService) : ControllerBase
+public class UsersController(IUserService userService, ILogger<AuthsController> logger) : ControllerBase
 {
     private readonly IUserService _userService = userService;
+    private readonly ILogger<AuthsController> _logger = logger;
 
-    [HttpGet("users")]
-    //[Authorize(Roles = "Admin")] 
-    public async Task<IActionResult> GetAllUsers([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
-    {
-        var response = await _userService.GetAllUsersAsync(pageIndex, pageSize);
-        return Ok(new
-        {
-            Status = "Success",
-            Data = response.Users,
-            Pagination = new
-            {
-                response.TotalCount,
-                response.PageIndex,
-                response.PageSize,
-                response.TotalPages
-            }
-        });
-    }
-
-    [HttpGet("{id}")]
+    [HttpPut("me")]
     [Authorize]
-    public async Task<IActionResult> GetById(Guid id)
+    public async Task<IActionResult> SelfUpdateUser([FromBody] SelfUpdateUserRequest request)
     {
-        var user = await _userService.GetUserByIdAsync(id);
-        if (user == null)
+        try
         {
-            return NotFound();
+            // Lấy UserId từ token JWT
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException("Invalid user token.");
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                _logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                throw new UnauthorizedAccessException("Invalid user token.");
+            }
+
+            await _userService.SelfUpdateUserAsync(userId, request);
+            _logger.LogInformation("User with ID {UserId} updated their information successfully.", userId);
+            return NoContent();
         }
-        return Ok(user);
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning("Self-update failed: {Message}", ex.Message);
+            return NotFound(new { Status = "Error", Message = ex.Message });
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogWarning("Self-update failed: {Message}", ex.Message);
+            return BadRequest(new { Status = "Error", Message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning("Self-update failed: {Message}", ex.Message);
+            return Unauthorized(new { Status = "Error", Message = ex.Message });
+        }
+        catch (DbUpdateException ex)
+        {
+            _logger.LogError(ex, "Database error during self-update for user.");
+            return StatusCode(500, new { Status = "Error", Message = "Failed to update user due to database error." });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error during self-update for user.");
+            return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred." });
+        }
     }
 }

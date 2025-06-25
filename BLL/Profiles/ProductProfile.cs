@@ -17,5 +17,21 @@ public class ProductProfile : Profile
 
         CreateMap<User, UserResponse>()
             .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt.ToUniversalTime()));
+
+        CreateMap<UpdateUserRequest, User>()
+            .ForMember(dest => dest.UserId, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Password, opt => opt.Ignore())
+            .ForMember(dest => dest.CartItems, opt => opt.Ignore())
+            .ForMember(dest => dest.Orders, opt => opt.Ignore());
+
+        CreateMap<SelfUpdateUserRequest, User>()
+           .ForMember(dest => dest.UserId, opt => opt.Ignore())
+           .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+           .ForMember(dest => dest.Password, opt => opt.Ignore())
+           .ForMember(dest => dest.Role, opt => opt.Ignore())
+           .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+           .ForMember(dest => dest.CartItems, opt => opt.Ignore())
+           .ForMember(dest => dest.Orders, opt => opt.Ignore());
     }
 }

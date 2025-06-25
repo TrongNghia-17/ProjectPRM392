@@ -45,6 +45,31 @@ public class ProductsController(IProductService productService) : ControllerBase
         }
     }
 
+    [HttpGet("price-range")]
+    public async Task<IActionResult> GetByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    {
+        try
+        {
+            var result = await _productService.GetByPriceRangeAsync(minPrice, maxPrice, pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.Products,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
+        }
+    }
+
     [HttpGet("search")]
     public async Task<IActionResult> SearchByName([FromQuery] string? name, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
     {
@@ -71,6 +96,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Staff")]
     public async Task<IActionResult> Create([FromBody] ProductRequest request)
     {
         try
@@ -82,34 +108,10 @@ public class ProductsController(IProductService productService) : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-    }
-
-    [HttpGet("price-range")]
-    public async Task<IActionResult> GetByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
-    {
-        try
-        {
-            var result = await _productService.GetByPriceRangeAsync(minPrice, maxPrice, pageIndex, pageSize);
-            return Ok(new
-            {
-                Status = "Success",
-                Data = result.Products,
-                Pagination = new
-                {
-                    result.TotalCount,
-                    result.PageIndex,
-                    result.PageSize,
-                    result.TotalPages
-                }
-            });
-        }
-        catch (ArgumentException ex)
-        {
-            return BadRequest(new { Message = ex.Message, Status = "Error" });
-        }
-    }
+    }    
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "Staff")]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
@@ -124,6 +126,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = "Staff")]
     public async Task<IActionResult> Update(Guid id, [FromBody] ProductRequest request)
     {
         try
