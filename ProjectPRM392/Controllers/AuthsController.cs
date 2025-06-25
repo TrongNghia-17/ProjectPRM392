@@ -16,7 +16,7 @@ public class AuthsController(IAuthService authService, ILogger<AuthsController> 
             var response = await _authService.RegisterAsync(request);
             return CreatedAtAction(
                 actionName: nameof(AdminsController.GetById),
-                controllerName: "Users",
+                controllerName: "Admins",
                 routeValues: new { id = response.UserId },
                 value: response
             );
