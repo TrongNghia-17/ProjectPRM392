@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<ICartItemService, CartItemService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICategoryService, CategoryService>();
         services.AddLogging(logging =>
         {
             logging.AddConsole();
