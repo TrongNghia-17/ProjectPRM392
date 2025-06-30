@@ -11,7 +11,7 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
     private readonly ILogger<AuthsController> _logger = logger;
 
     [HttpGet("users")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetAllUsers([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
     {
         var response = await _userService.GetAllUsersAsync(pageIndex, pageSize);
@@ -30,7 +30,7 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetById(Guid id)
     {
         var user = await _userService.GetUserByIdAsync(id);
@@ -42,7 +42,7 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
     {
         await _userService.UpdateUserAsync(id, request);
@@ -50,7 +50,7 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
     }
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         try

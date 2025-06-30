@@ -96,7 +96,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Staff")]
+    //[Authorize(Roles = "Staff")]
     public async Task<IActionResult> Create([FromBody] ProductRequest request)
     {
         try
@@ -111,7 +111,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }    
 
     [HttpDelete("{id}")]
-    [Authorize(Roles = "Staff")]
+    //[Authorize(Roles = "Staff")]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
@@ -126,7 +126,7 @@ public class ProductsController(IProductService productService) : ControllerBase
     }
 
     [HttpPut("{id}")]
-    [Authorize(Roles = "Staff")]
+    //[Authorize(Roles = "Staff")]
     public async Task<IActionResult> Update(Guid id, [FromBody] ProductRequest request)
     {
         try

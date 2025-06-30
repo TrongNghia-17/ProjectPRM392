@@ -8,7 +8,7 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
     private readonly ILogger<AuthsController> _logger = logger;
 
     [HttpPut("me")]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> SelfUpdateUser([FromBody] SelfUpdateUserRequest request)
     {
         try
