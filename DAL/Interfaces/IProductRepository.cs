@@ -2,6 +2,7 @@
 
 public interface IProductRepository
 {
+    Task<(IEnumerable<Product> Products, int TotalCount)> GetAllAsync(int pageIndex, int pageSize);
     Task<(IEnumerable<Product> Products, int TotalCount)> GetByCategoryIdAsync(Guid categoryId, int pageIndex, int pageSize);
     Task<(IEnumerable<Product> Products, int TotalCount)> SearchByNameAsync(string name, int pageIndex, int pageSize);
     Task<bool> ExistsByNameAsync(string name);

@@ -147,5 +147,30 @@ public class ProductsController(IProductService productService) : ControllerBase
         {
             return BadRequest(new { Message = ex.Message, Status = "Error" });
         }
-    }    
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    {
+        try
+        {
+            var result = await _productService.GetAllAsync(pageIndex, pageSize);
+            return Ok(new
+            {
+                Status = "Success",
+                Data = result.Products,
+                Pagination = new
+                {
+                    result.TotalCount,
+                    result.PageIndex,
+                    result.PageSize,
+                    result.TotalPages
+                }
+            });
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(new { Message = ex.Message, Status = "Error" });
+        }
+    }
 }

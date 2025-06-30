@@ -128,4 +128,26 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
             .FirstOrDefaultAsync();
         return product;
     }
+
+    public async Task<(IEnumerable<Product> Products, int TotalCount)> GetAllAsync(int pageIndex, int pageSize)
+    {
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
+
+        var query = _context.Products.AsQueryable();
+        var totalCount = await query.CountAsync();
+        var products = await query
+            .Skip(pageIndex * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return (products, totalCount);
+    }
+
 }

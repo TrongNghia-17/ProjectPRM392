@@ -164,5 +164,29 @@ public class ProductService(IProductRepository productRepository, IMapper mapper
         var response = _mapper.Map<ProductResponse>(updatedProduct);
 
         return response;
-    }    
+    }
+
+    public async Task<PagedProductResponse> GetAllAsync(int pageIndex, int pageSize)
+    {
+        if (pageIndex < 0)
+        {
+            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
+        }
+        if (pageSize <= 0)
+        {
+            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+        }
+
+        var (products, totalCount) = await _productRepository.GetAllAsync(pageIndex, pageSize);
+        var productResponses = _mapper.Map<IEnumerable<ProductResponse>>(products);
+
+        return new PagedProductResponse
+        {
+            Products = productResponses,
+            TotalCount = totalCount,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        };
+    }
 }

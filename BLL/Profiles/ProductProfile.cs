@@ -1,4 +1,6 @@
-﻿namespace BLL.Profiles;
+﻿using BLL.DTOs.CategoriesDTO;
+
+namespace BLL.Profiles;
 
 public class ProductProfile : Profile
 {
@@ -33,5 +35,12 @@ public class ProductProfile : Profile
            .ForMember(dest => dest.IsActive, opt => opt.Ignore())
            .ForMember(dest => dest.CartItems, opt => opt.Ignore())
            .ForMember(dest => dest.Orders, opt => opt.Ignore());
+
+        CreateMap<Category, CategoryResponse>();
+
+        CreateMap<CategoryRequest, Category>()
+            .ForMember(dest => dest.CategoryId, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.Products, opt => opt.Ignore());
     }
 }

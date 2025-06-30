@@ -2,6 +2,7 @@
 
 public interface IProductService
 {
+    Task<PagedProductResponse> GetAllAsync(int pageIndex, int pageSize);
     Task<PagedProductResponse> GetByCategoryIdAsync(Guid categoryId, int pageIndex, int pageSize);
     Task<PagedProductResponse> SearchByNameAsync(string name, int pageIndex, int pageSize);
     Task<PagedProductResponse> GetByPriceRangeAsync(decimal minPrice, decimal maxPrice, int pageIndex, int pageSize);
