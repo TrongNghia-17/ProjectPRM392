@@ -12,5 +12,6 @@ namespace BLL.Interfaces
         Task<OrderResponseDto> CreateOrderAsync(CreateOrderRequest request);
         Task<List<OrderResponseDto>> GetAllOrdersAsync();
         Task<OrderResponseDto> GetOrderByIdAsync(Guid orderId);
+        Task<decimal> GetMonthlyRevenueAsync(int month, int year);
     }
 }

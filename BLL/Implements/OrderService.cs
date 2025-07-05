@@ -117,5 +117,10 @@ namespace BLL.Implements
                 }).ToList()
             };
         }
+
+        public async Task<decimal> GetMonthlyRevenueAsync(int month, int year)
+        {
+            return await _orderRepository.GetMonthlyRevenueAsync(month, year);
+        }
     }
 }

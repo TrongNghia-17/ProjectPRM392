@@ -12,5 +12,6 @@ namespace DAL.Interfaces
         Task AddOrderAsync(Order order);
         Task<Order> GetOrderByIdAsync(Guid orderId);
         Task<List<Order>> GetAllOrdersAsync();
+        Task<decimal> GetMonthlyRevenueAsync(int month, int year);
     }
 }

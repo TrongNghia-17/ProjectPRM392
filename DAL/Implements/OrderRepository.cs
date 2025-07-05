@@ -28,5 +28,12 @@
             .ThenInclude(oi => oi.Product)
             .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
+
+        public async Task<decimal> GetMonthlyRevenueAsync(int month, int year)
+        {
+            return await _context.Orders
+                .Where(o => o.OrderDate.Month == month && o.OrderDate.Year == year)
+                .SumAsync(o => o.Total);
+        }
     }
 }

@@ -37,9 +37,32 @@ namespace ProjectPRM392.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+              ?? throw new UnauthorizedAccessException("Invalid user token.");
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                throw new UnauthorizedAccessException("Invalid user token.");
+            }
             var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
             return Ok(order);
+        }
+
+        [HttpGet("revenue")]
+        public async Task<IActionResult> GetMonthlyRevenue([FromQuery] int month, [FromQuery] int year)
+        {
+            if (month < 1 || month > 12 || year < 2000)
+                return BadRequest("Invalid month or year.");
+
+            var totalRevenue = await _orderService.GetMonthlyRevenueAsync(month, year);
+
+            return Ok(new
+            {
+                Month = month,
+                Year = year,
+                TotalRevenue = totalRevenue
+            });
         }
     }
 }
