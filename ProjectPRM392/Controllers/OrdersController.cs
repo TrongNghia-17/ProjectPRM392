@@ -34,7 +34,7 @@ namespace ProjectPRM392.Controllers
             return Ok(orders);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet]
         public async Task<IActionResult> GetById()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
