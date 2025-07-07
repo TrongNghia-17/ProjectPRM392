@@ -27,14 +27,14 @@ namespace ProjectPRM392.Controllers
                 return BadRequest(new { Message = ex.Message, Status = "Error" });
             }
         }
-        [HttpGet]
+        [HttpGet("all")]
         public async Task<IActionResult> GetAll()
         {
             var orders = await _orderService.GetAllOrdersAsync();
             return Ok(orders);
         }
 
-        [HttpGet]
+        [HttpGet("by-user")]
         public async Task<IActionResult> GetById()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
