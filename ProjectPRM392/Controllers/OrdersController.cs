@@ -44,7 +44,7 @@ namespace ProjectPRM392.Controllers
                 //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
                 throw new UnauthorizedAccessException("Invalid user token.");
             }
-            var order = await _orderService.GetOrderByIdAsync(id);
+            var order = await _orderService.GetOrderByIdAsync(userId);
             if (order == null) return NotFound();
             return Ok(order);
         }
