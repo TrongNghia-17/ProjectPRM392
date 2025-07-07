@@ -35,7 +35,7 @@ namespace ProjectPRM392.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetById()
         {
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
               ?? throw new UnauthorizedAccessException("Invalid user token.");
