@@ -27,26 +27,55 @@ namespace ProjectPRM392.Controllers
                 return BadRequest(new { Message = ex.Message, Status = "Error" });
             }
         }
-        [HttpGet("all")]
+        [HttpGet("GetAllOrderOfUser")]
         public async Task<IActionResult> GetAll()
         {
-            var orders = await _orderService.GetAllOrdersAsync();
-            return Ok(orders);
+            try
+            {
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException("Invalid user token.");
+
+                if (!Guid.TryParse(userIdClaim, out var userId))
+                {
+                    throw new UnauthorizedAccessException("Invalid user token format.");
+                }
+
+                var orders = await _orderService.GetAllOrdersByUserIdAsync(userId);
+                return Ok(orders);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
-        [HttpGet("by-user")]
-        public async Task<IActionResult> GetById()
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-              ?? throw new UnauthorizedAccessException("Invalid user token.");
-            if (!Guid.TryParse(userIdClaim, out var userId))
-            {
-                //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
-                throw new UnauthorizedAccessException("Invalid user token.");
-            }
-            var order = await _orderService.GetOrderByIdAsync(userId);
+            var order = await _orderService.GetOrderByIdAsync(id);
             if (order == null) return NotFound();
             return Ok(order);
+        }
+
+        [HttpGet("{id}/items")]
+        public async Task<IActionResult> GetOrderItems(Guid id)
+        {
+            try
+            {
+                var orderItems = await _orderService.GetOrderItemsByOrderIdAsync(id);
+                if (orderItems == null || !orderItems.Any())
+                    return NotFound(new { Message = "No items found for this order." });
+                return Ok(orderItems);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
         }
 
         [HttpGet("revenue")]

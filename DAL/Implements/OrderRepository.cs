@@ -8,6 +8,7 @@
             _context = context;
 
         }
+
         public async Task AddOrderAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
@@ -19,6 +20,23 @@
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
             .ToListAsync();
+        }
+
+        public async Task<List<Order>> GetAllOrdersByUserIdAsync(Guid userId)
+        {
+            return await _context.Orders
+                .Where(o => o.UserId == userId)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .ToListAsync();
+        }
+
+        public async Task<List<OrderItem>> GetOrderItemsByOrderIdAsync(Guid orderId)
+        {
+            return await _context.OrderItems
+                .Where(oi => oi.OrderId == orderId)
+                .Include(oi => oi.Product)
+                .ToListAsync();
         }
 
         public async Task<Order> GetOrderByIdAsync(Guid orderId)

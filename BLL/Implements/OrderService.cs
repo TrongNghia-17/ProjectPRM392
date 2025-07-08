@@ -97,6 +97,28 @@ namespace BLL.Implements
             }).ToList();
         }
 
+        public async Task<List<OrderResponseDto>> GetAllOrdersByUserIdAsync(Guid userId)
+        {
+            var orders = await _orderRepository.GetAllOrdersByUserIdAsync(userId);
+
+            return orders.Select(o => new OrderResponseDto
+            {
+                OrderId = o.OrderId,
+                OrderDate = o.OrderDate,
+                ShippingAddress = o.ShippingAddress,
+                Total = o.Total,
+                Status = o.Status,
+                Items = o.OrderItems.Select(oi => new OrderItemDto
+                {
+                    OrderItemId = oi.OrderItemId,
+                    ProductId = oi.ProductId,
+                    ProductName = oi.Product.Name,
+                    Price = oi.Price,
+                    Quantity = oi.Quantity
+                }).ToList()
+            }).ToList();
+        }
+
         public async Task<OrderResponseDto> GetOrderByIdAsync(Guid orderId)
         {
             var order = await _orderRepository.GetOrderByIdAsync(orderId);
@@ -108,6 +130,7 @@ namespace BLL.Implements
                 OrderDate = order.OrderDate,
                 ShippingAddress = order.ShippingAddress,
                 Total = order.Total,
+                Status = order.Status,
                 Items = order.OrderItems.Select(oi => new OrderItemDto
                 {
                     ProductId = oi.ProductId,
@@ -116,6 +139,23 @@ namespace BLL.Implements
                     Quantity = oi.Quantity
                 }).ToList()
             };
+        }
+
+        public async Task<List<OrderItemDto>> GetOrderItemsByOrderIdAsync(Guid orderId)
+        {
+            var orderItems = await _orderRepository.GetOrderItemsByOrderIdAsync(orderId);
+
+            if (orderItems == null || !orderItems.Any())
+                return new List<OrderItemDto>();
+
+            return orderItems.Select(oi => new OrderItemDto
+            {
+                OrderItemId = oi.OrderItemId,
+                ProductId = oi.ProductId,
+                ProductName = oi.Product.Name,                
+                Price = oi.Price,
+                Quantity = oi.Quantity
+            }).ToList();
         }
 
         public async Task<decimal> GetMonthlyRevenueAsync(int month, int year)
