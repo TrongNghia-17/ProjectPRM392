@@ -31,6 +31,12 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         };
     }
 
+    public async Task<IEnumerable<CategoryResponse>> GetAllAsync()
+    {
+        var categories = await _categoryRepository.GetAllAsync();
+        return _mapper.Map<IEnumerable<CategoryResponse>>(categories);
+    }
+
     public async Task<CategoryResponse> GetByIdAsync(Guid id)
     {
         var category = await _categoryRepository.GetByIdAsync(id);

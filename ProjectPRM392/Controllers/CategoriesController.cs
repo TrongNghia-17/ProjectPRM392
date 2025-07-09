@@ -6,28 +6,21 @@ namespace ProjectPRM392.Controllers;
 [ApiController]
 public class CategoriesController(ICategoryService categoryService) : ControllerBase
 {
-    private readonly ICategoryService _categoryService = categoryService;
+    private readonly ICategoryService _categoryService = categoryService;    
 
     [HttpGet]
-    public async Task<IActionResult> GetAll([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAll()
     {
         try
         {
-            var result = await _categoryService.GetAllAsync(pageIndex, pageSize);
+            var categories = await _categoryService.GetAllAsync();
             return Ok(new
             {
                 Status = "Success",
-                Data = result.Categories,
-                Pagination = new
-                {
-                    result.TotalCount,
-                    result.PageIndex,
-                    result.PageSize,
-                    result.TotalPages
-                }
+                Data = categories
             });
         }
-        catch (ArgumentException ex)
+        catch (Exception ex)
         {
             return BadRequest(new { Message = ex.Message, Status = "Error" });
         }

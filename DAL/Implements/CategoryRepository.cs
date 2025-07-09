@@ -26,6 +26,11 @@ public class CategoryRepository(ElectronicStoreDbContext context) : ICategoryRep
         return (categories, totalCount);
     }
 
+    public async Task<IEnumerable<Category>> GetAllAsync()
+    {
+        return await _context.Categories.ToListAsync();
+    }
+
     public async Task<Category?> GetByIdAsync(Guid id)
     {
         return await _context.Categories.FindAsync(id);
