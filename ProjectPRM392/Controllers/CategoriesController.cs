@@ -14,11 +14,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         try
         {
             var categories = await _categoryService.GetAllAsync();
-            return Ok(new
-            {
-                Status = "Success",
-                Data = categories
-            });
+            return Ok(categories);
         }
         catch (Exception ex)
         {
