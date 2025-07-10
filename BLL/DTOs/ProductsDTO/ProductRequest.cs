@@ -13,7 +13,7 @@ public class ProductRequest
     [Range(0, double.MaxValue, ErrorMessage = "Giá sản phẩm phải lớn hơn hoặc bằng 0.")]
     public decimal Price { get; set; }
 
-    [Range(0, 10, ErrorMessage = "Số lượng tồn kho phải từ 0 đến 10.")]
+    //[Range(0, 10, ErrorMessage = "Số lượng tồn kho phải từ 0 đến 10.")]
     public int Quantity { get; set; }    
 
     [Url(ErrorMessage = "URL hình ảnh không hợp lệ.")]
