@@ -27,6 +27,7 @@ namespace ProjectPRM392.Controllers
                 return BadRequest(new { Message = ex.Message, Status = "Error" });
             }
         }
+
         [HttpGet("GetAllOrderOfUser")]
         public async Task<IActionResult> GetAll()
         {
@@ -53,6 +54,23 @@ namespace ProjectPRM392.Controllers
             }
         }
 
+        [HttpGet("GetAllOrder")]
+        public async Task<IActionResult> GetAllOrder()
+        {
+            try
+            {                
+                var orders = await _orderService.GetAllOrdersAsync();
+                return Ok(orders);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                return Unauthorized(new { Message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message });
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)

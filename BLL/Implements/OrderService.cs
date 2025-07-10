@@ -89,9 +89,11 @@ namespace BLL.Implements
                 Total = o.Total,
                 Items = o.OrderItems.Select(oi => new OrderItemDto
                 {
+                    OrderItemId = oi.OrderItemId,
                     ProductId = oi.ProductId,
                     ProductName = oi.Product.Name,
                     Price = oi.Price,
+                    Status = o.Status,
                     Quantity = oi.Quantity
                 }).ToList()
             }).ToList();
