@@ -9,6 +9,7 @@ namespace DAL.Interfaces
 {
     public interface IOrderRepository
     {
+        Task UpdateOrderAsync(Order order);
         Task AddOrderAsync(Order order);
         Task<Order> GetOrderByIdAsync(Guid orderId);
         Task<List<Order>> GetAllOrdersAsync();

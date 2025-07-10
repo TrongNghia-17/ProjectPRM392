@@ -14,6 +14,20 @@ namespace ProjectPRM392.Controllers
             _orderService = orderService;
         }
 
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateOrder(Guid id, [FromBody] UpdateOrderRequest request)
+        {
+            try
+            {
+                var updatedOrder = await _orderService.UpdateOrderAsync(id, request);
+                return Ok(new { Order = updatedOrder, Message = "Order updated successfully" });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { Message = ex.Message, Status = "Error" });
+            }
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
         {

@@ -9,6 +9,7 @@ namespace BLL.Interfaces
 {
     public interface IOrderService
     {
+        Task<OrderResponseDto> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request);
         Task<OrderResponseDto> CreateOrderAsync(CreateOrderRequest request);
         Task<List<OrderResponseDto>> GetAllOrdersAsync();
         Task<List<OrderResponseDto>> GetAllOrdersByUserIdAsync(Guid userId);

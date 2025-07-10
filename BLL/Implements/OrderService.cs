@@ -19,6 +19,37 @@ namespace BLL.Implements
             _orderRepository = orderRepository;
             _context = context;
         }
+
+        public async Task<OrderResponseDto> UpdateOrderAsync(Guid orderId, UpdateOrderRequest request)
+        {
+            var order = await _orderRepository.GetOrderByIdAsync(orderId);
+            if (order == null)
+                throw new Exception("Order not found.");
+
+            // Cập nhật thông tin đơn hàng
+            order.Status = request.Status ?? order.Status;
+            order.ShippingAddress = request.ShippingAddress ?? order.ShippingAddress;
+
+            await _orderRepository.UpdateOrderAsync(order);
+
+            // Trả về DTO
+            return new OrderResponseDto
+            {
+                OrderId = order.OrderId,
+                OrderDate = order.OrderDate,
+                ShippingAddress = order.ShippingAddress,
+                Total = order.Total,
+                Status = order.Status,
+                Items = order.OrderItems.Select(oi => new OrderItemDto
+                {
+                    ProductId = oi.ProductId,
+                    ProductName = oi.Product.Name,
+                    Price = oi.Price,
+                    Quantity = oi.Quantity
+                }).ToList()
+            };
+        }
+
         public async Task<OrderResponseDto> CreateOrderAsync(CreateOrderRequest request)
         {
             var order = new Order
@@ -27,7 +58,7 @@ namespace BLL.Implements
                 UserId = request.UserId,
                 OrderDate = DateTime.Now,
                 ShippingAddress = request.ShippingAddress,
-                Status = "Susscess",
+                Status = "Chưa thanh toán",
                 Total = 0,
                 OrderItems = new List<OrderItem>()
             };

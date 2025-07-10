@@ -9,6 +9,12 @@
 
         }
 
+        public async Task UpdateOrderAsync(Order order)
+        {
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task AddOrderAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
