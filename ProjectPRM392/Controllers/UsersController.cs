@@ -7,7 +7,7 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
     private readonly IUserService _userService = userService;
     private readonly ILogger<AuthsController> _logger = logger;
 
-    [HttpPut("me")]
+    [HttpPut("SelfUpdateUser")]
     //[Authorize]
     public async Task<IActionResult> SelfUpdateUser([FromBody] SelfUpdateUserRequest request)
     {
@@ -50,6 +50,40 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
         {
             _logger.LogError(ex, "Unexpected error during self-update for user.");
             return StatusCode(500, new { Status = "Error", Message = "An unexpected error occurred." });
+        }
+    }
+
+    [HttpGet("GetUser")]
+    [Authorize]
+    public async Task<IActionResult> GetUser()
+    {
+        try
+        {
+            // Lấy UserId từ token JWT để kiểm tra quyền
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                ?? throw new UnauthorizedAccessException("Invalid user token.");
+            if (!Guid.TryParse(userIdClaim, out var currentUserId))
+            {
+                _logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
+            }
+
+            // Kiểm tra quyền: Chỉ admin hoặc chính người dùng đó có thể xem thông tin
+            // Giả sử bạn có logic kiểm tra vai trò trong User (ví dụ: Role == "Admin")
+            var user = await _userService.GetUserByIdAsync(currentUserId);
+
+            _logger.LogInformation("User with ID {UserId} retrieved successfully.", currentUserId);
+            return Ok(user);
+        }
+        catch (KeyNotFoundException ex)
+        {
+            _logger.LogWarning("Get user failed: {Message}", ex.Message);
+            return NotFound(new { Status = "Error", Message = ex.Message });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            _logger.LogWarning("Get user failed: {Message}", ex.Message);
+            return Unauthorized(new { Status = "Error", Message = ex.Message });
         }
     }
 }

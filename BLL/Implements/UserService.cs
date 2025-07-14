@@ -45,10 +45,23 @@ public class UserService
         return response;
     }
 
-    public async Task<AuthResponse> GetUserByIdAsync(Guid id)
+    public async Task<UserResponse> GetUserByIdAsync(Guid id)
     {
-        var user = await _userRepository.GetByIdAsync(id) ?? throw new KeyNotFoundException($"User with ID {id} not found.");
-        return new AuthResponse { UserId = user.UserId, Email = user.Email, Token = string.Empty };
+        var cacheKey = string.Format(UserCacheKey, id);
+        if (_memoryCache.TryGetValue(cacheKey, out UserResponse? cachedUser) && cachedUser != null)
+        {
+            _logger.LogInformation("Retrieved user with ID {UserId} from cache.", id);
+            return cachedUser;
+        }
+
+        var user = await _userRepository.GetByIdAsync(id)
+            ?? throw new KeyNotFoundException($"User with ID {id} not found.");
+        var response = _mapper.Map<UserResponse>(user);
+
+        _memoryCache.Set(cacheKey, response, TimeSpan.FromMinutes(10));
+        _logger.LogInformation("Cached user with ID {UserId}.", id);
+
+        return response;
     }
 
     public async Task UpdateUserAsync(Guid id, UpdateUserRequest request)
