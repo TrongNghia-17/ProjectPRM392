@@ -16,5 +16,6 @@ namespace BLL.Interfaces
         Task<OrderResponseDto> GetOrderByIdAsync(Guid orderId);
         Task<decimal> GetMonthlyRevenueAsync(int month, int year);
         Task<List<OrderItemDto>> GetOrderItemsByOrderIdAsync(Guid orderId);
+        Task<Dictionary<int, decimal>> GetMonthlyRevenueAsync(int year);
     }
 }

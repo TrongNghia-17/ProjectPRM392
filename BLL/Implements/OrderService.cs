@@ -101,7 +101,7 @@ namespace BLL.Implements
                 {
                     ProductId = oi.ProductId,
                     Quantity = oi.Quantity,
-                   
+
                 }).ToList()
             };
 
@@ -185,7 +185,7 @@ namespace BLL.Implements
             {
                 OrderItemId = oi.OrderItemId,
                 ProductId = oi.ProductId,
-                ProductName = oi.Product.Name,                
+                ProductName = oi.Product.Name,
                 Price = oi.Price,
                 Quantity = oi.Quantity
             }).ToList();
@@ -194,6 +194,11 @@ namespace BLL.Implements
         public async Task<decimal> GetMonthlyRevenueAsync(int month, int year)
         {
             return await _orderRepository.GetMonthlyRevenueAsync(month, year);
+        }
+
+        public async Task<Dictionary<int, decimal>> GetMonthlyRevenueAsync(int year)
+        {
+            return await _orderRepository.GetRevenueAsync(year);
         }
     }
 }

@@ -125,5 +125,12 @@ namespace ProjectPRM392.Controllers
                 TotalRevenue = totalRevenue
             });
         }
+
+        [HttpGet("monthly-revenue/{year}")]
+        public async Task<IActionResult> GetMonthlyRevenue(int year)
+        {
+            var result = await _orderService.GetMonthlyRevenueAsync(year);
+            return Ok(result);
+        }
     }
 }

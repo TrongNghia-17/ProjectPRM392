@@ -16,5 +16,6 @@ namespace DAL.Interfaces
         Task<List<Order>> GetAllOrdersByUserIdAsync(Guid userId);
         Task<decimal> GetMonthlyRevenueAsync(int month, int year);
         Task<List<OrderItem>> GetOrderItemsByOrderIdAsync(Guid orderId);
+        Task<Dictionary<int, decimal>> GetRevenueAsync(int year);
     }
 }
