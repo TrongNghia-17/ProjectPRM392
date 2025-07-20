@@ -54,7 +54,7 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
     }
 
     [HttpGet("GetUser")]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> GetUser()
     {
         try
