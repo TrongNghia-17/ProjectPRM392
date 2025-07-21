@@ -23,8 +23,9 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
             }
 
             await _userService.SelfUpdateUserAsync(userId, request);
+            var updatedUser = await _userService.GetUserByIdAsync(userId);
             _logger.LogInformation("User with ID {UserId} updated their information successfully.", userId);
-            return NoContent();
+            return Ok(updatedUser);
         }
         catch (KeyNotFoundException ex)
         {
