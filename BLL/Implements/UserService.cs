@@ -58,7 +58,7 @@ public class UserService
         return response;
     }
 
-    public async Task UpdateUserAsync(Guid id, UpdateUserRequest request)
+    public async Task<User> UpdateUserAsync(Guid id, UpdateUserRequest request)
     {
         if (request == null)
             throw new ArgumentNullException(nameof(request));
@@ -69,10 +69,12 @@ public class UserService
         // Ánh xạ dữ liệu từ request sang entity
         _mapper.Map(request, user);
 
-        await _userRepository.UpdateAsync(user);
+        var userUpdate = await _userRepository.UpdateAsync(user);
 
         // Xóa cache liên quan
         _memoryCache.Remove(string.Format(UserCacheKey, id));
+
+        return userUpdate;  
     }
 
     public async Task DeleteUserAsync(Guid id)

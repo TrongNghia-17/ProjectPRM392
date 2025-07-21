@@ -6,7 +6,7 @@ public interface IUserService
 {
     Task<List<UserResponse>> GetAllUsersAsync();
     Task<UserResponse> GetUserByIdAsync(Guid id);
-    Task UpdateUserAsync(Guid id, UpdateUserRequest request);
+    Task<User> UpdateUserAsync(Guid id, UpdateUserRequest request);
     Task DeleteUserAsync(Guid id);
     Task SelfUpdateUserAsync(Guid userId, SelfUpdateUserRequest request);
     Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId);

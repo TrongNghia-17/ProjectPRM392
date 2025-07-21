@@ -27,13 +27,15 @@ public class UserRepository(ElectronicStoreDbContext context) : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(User user)
+    public async Task<User> UpdateAsync(User user)
     {
         if (user == null)
             throw new ArgumentNullException(nameof(user));
 
-        _context.Users.Update(user);
+       _context.Users.Update(user);
         await _context.SaveChangesAsync();
+
+        return user;
     }
 
     public async Task<List<User>> GetAllAsync()

@@ -33,12 +33,20 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
         return Ok(user);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut()]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest request)
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserRequest request)
     {
-        await _userService.UpdateUserAsync(id, request);
-        return NoContent();
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+               ?? throw new UnauthorizedAccessException("Invalid user token.");
+        if (!Guid.TryParse(userIdClaim, out var userId))
+        {
+            _logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+            throw new UnauthorizedAccessException("Invalid user token.");
+        }
+
+        var user = await _userService.UpdateUserAsync(userId, request);
+        return Ok(user);
     }
 
     [HttpDelete("{id}")]
