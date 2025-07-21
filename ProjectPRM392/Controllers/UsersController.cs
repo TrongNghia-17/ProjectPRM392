@@ -90,34 +90,34 @@ public class UsersController(IUserService userService, ILogger<AuthsController> 
         }
     }
 
-    [HttpPut("update-and-create-order")]
-    public async Task<IActionResult> UpdateUserAndCreateOrder([FromBody] UpdateOrderUserInforRequest request)
-    {
-        try
-        {
-            // Lấy UserId từ token JWT để kiểm tra quyền
-            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                ?? throw new UnauthorizedAccessException("Invalid user token.");
-            if (!Guid.TryParse(userIdClaim, out var currentUserId))
-            {
-                _logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
-                return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
-            }
+    //[HttpPut("update-and-create-order")]
+    //public async Task<IActionResult> UpdateUserAndCreateOrder([FromBody] UpdateOrderUserInforRequest request)
+    //{
+    //    try
+    //    {
+    //        // Lấy UserId từ token JWT để kiểm tra quyền
+    //        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+    //            ?? throw new UnauthorizedAccessException("Invalid user token.");
+    //        if (!Guid.TryParse(userIdClaim, out var currentUserId))
+    //        {
+    //            _logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+    //            return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
+    //        }
 
-            var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(currentUserId, request);
-            return Ok(new { Message = "User information updated, order created, and cart cleared successfully."});
-        }
-        catch (KeyNotFoundException ex)
-        {
-            return NotFound(new { Message = ex.Message, Status = "Error" });
-        }
-        catch (InvalidOperationException ex)
-        {
-            return BadRequest(new { Message = ex.Message, Status = "Error" });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Message = ex.Message, Status = "Error" });
-        }
-    }
+    //        var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(currentUserId, request);
+    //        return Ok(new { Message = "User information updated, order created, and cart cleared successfully."});
+    //    }
+    //    catch (KeyNotFoundException ex)
+    //    {
+    //        return NotFound(new { Message = ex.Message, Status = "Error" });
+    //    }
+    //    catch (InvalidOperationException ex)
+    //    {
+    //        return BadRequest(new { Message = ex.Message, Status = "Error" });
+    //    }
+    //    catch (Exception ex)
+    //    {
+    //        return BadRequest(new { Message = ex.Message, Status = "Error" });
+    //    }
+    //}
 }

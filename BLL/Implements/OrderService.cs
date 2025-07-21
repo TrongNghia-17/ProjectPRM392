@@ -83,7 +83,7 @@ namespace BLL.Implements
 
                 order.Total += product.Price * item.Quantity;
 
-                product.Quantity -= item.Quantity;
+                //product.Quantity -= item.Quantity;
 
                 order.OrderItems.Add(orderItem);
             }

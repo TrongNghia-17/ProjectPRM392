@@ -9,9 +9,11 @@ namespace ProjectPRM392.Controllers
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
-        public OrdersController(IOrderService orderService)
+        private readonly IUserService _userService;
+        public OrdersController(IOrderService orderService, IUserService userService)
         {
             _orderService = orderService;
+            _userService = userService;
         }
 
         [HttpPut("{id}")]
@@ -29,12 +31,21 @@ namespace ProjectPRM392.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateOrderRequest request)
+        public async Task<IActionResult> CreateOrder()
         {
             try
             {
-                var orderId = await _orderService.CreateOrderAsync(request);
-                return Ok(new { OrderId = orderId, Message = "Order created successfully" });
+                // Lấy UserId từ token JWT để kiểm tra quyền
+                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                    ?? throw new UnauthorizedAccessException("Invalid user token.");
+                if (!Guid.TryParse(userIdClaim, out var currentUserId))
+                {
+                    //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                    return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
+                }
+
+                var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(currentUserId);
+                return Ok(new { Message = "User information updated, order created, and cart cleared successfully." });
             }
             catch (Exception ex)
             {

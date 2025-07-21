@@ -139,19 +139,22 @@ public class UserService
         _logger.LogInformation("User with ID {UserId} updated their information successfully.", userId);
     }
 
-    public async Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId, UpdateOrderUserInforRequest request)
+    public async Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId)
     {
         //using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
             // Cập nhật thông tin người dùng
-            var user = await _userRepository.GetByIdAsync(userId) ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
-            user.FullName = request.FullName ?? user.FullName;
-            //user.Email = request.Email ?? user.Email;
-            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
-            user.Address = request.Address ?? user.Address;
+            //var user = await _userRepository.GetByIdAsync(userId) ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
+            //user.FullName = request.FullName ?? user.FullName;
+            ////user.Email = request.Email ?? user.Email;
+            //user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+            //user.Address = request.Address ?? user.Address;
 
-            await _userRepository.UpdateAsync(user);
+            //await _userRepository.UpdateAsync(user);
+
+            var user = await _userRepository.GetByIdAsync(userId)
+            ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
 
             // Lấy giỏ hàng của người dùng
             var cartItems = (await _cartItemService.GetCartItemsByUserIdAsync(userId, 0, int.MaxValue)).CartItems;
