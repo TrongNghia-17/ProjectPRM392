@@ -30,8 +30,8 @@ namespace ProjectPRM392.Controllers
             }
         }
 
-        [HttpPost]
-        public async Task<IActionResult> CreateOrder()
+        [HttpPost("{userId}")]
+        public async Task<IActionResult> CreateOrder(Guid userId)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace ProjectPRM392.Controllers
                     return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
                 }
 
-                var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(currentUserId);
+                var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(userId);
                 return Ok(new { Message = "User information updated, order created, and cart cleared successfully." });
             }
             catch (Exception ex)
