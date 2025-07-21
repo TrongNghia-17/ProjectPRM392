@@ -36,13 +36,13 @@ namespace ProjectPRM392.Controllers
             try
             {
                 // Lấy UserId từ token JWT để kiểm tra quyền
-                var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-                    ?? throw new UnauthorizedAccessException("Invalid user token.");
-                if (!Guid.TryParse(userIdClaim, out var currentUserId))
-                {
-                    //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
-                    return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
-                }
+                //var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+                //    ?? throw new UnauthorizedAccessException("Invalid user token.");
+                //if (!Guid.TryParse(userIdClaim, out var currentUserId))
+                //{
+                //    //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                //    return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
+                //}
 
                 var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(userId);
                 return Ok(new { Message = "User information updated, order created, and cart cleared successfully." });
