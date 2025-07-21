@@ -45,7 +45,7 @@ namespace ProjectPRM392.Controllers
                 //}
 
                 var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(userId);
-                return Ok(new { Message = "User information updated, order created, and cart cleared successfully." });
+                return Ok(new { Message = "Order created, and cart cleared successfully.", Status = "Success" });
             }
             catch (Exception ex)
             {
