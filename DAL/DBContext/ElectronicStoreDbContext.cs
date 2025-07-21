@@ -137,6 +137,7 @@ public partial class ElectronicStoreDbContext : DbContext
             entity.Property(e => e.FullName).HasMaxLength(100);
             entity.Property(e => e.PhoneNumber).HasMaxLength(15);
             entity.Property(e => e.Role).HasMaxLength(50);
+            entity.Property(e => e.Address).HasMaxLength(500);
         });
 
         OnModelCreatingPartial(modelBuilder);
