@@ -57,6 +57,18 @@ public class CartItemService
         //await _productRepository.UpdateAsync(product);
     }
 
+    public async Task ClearCartAsync(Guid userId)
+    {
+        if (userId == Guid.Empty)
+            throw new ArgumentException("User ID cannot be empty.", nameof(userId));
+
+        var cartItems = await _cartItemRepository.GetByUserIdAsync(userId, 0, int.MaxValue);
+        foreach (var cartItem in cartItems.CartItems)
+        {
+            await _cartItemRepository.DeleteAsync(userId, cartItem.ProductId);
+        }
+    }
+
     public async Task DecreaseQuantityAsync(Guid userId, Guid productId, int quantity)
     {
         if (userId == Guid.Empty)

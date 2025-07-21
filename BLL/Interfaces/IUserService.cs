@@ -1,4 +1,6 @@
-﻿namespace BLL.Interfaces;
+﻿using BLL.DTOs.OdersDTO;
+
+namespace BLL.Interfaces;
 
 public interface IUserService
 {
@@ -7,4 +9,5 @@ public interface IUserService
     Task UpdateUserAsync(Guid id, UpdateUserRequest request);
     Task DeleteUserAsync(Guid id);
     Task SelfUpdateUserAsync(Guid userId, SelfUpdateUserRequest request);
+    Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId, UpdateOrderUserInforRequest request);
 }

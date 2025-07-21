@@ -1,13 +1,21 @@
-﻿namespace BLL.Implements;
+﻿using BLL.DTOs.OdersDTO;
+using BLL.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace BLL.Implements;
 
 public class UserService
     (IMemoryCache memoryCache,
     IUserRepository userRepository,
+    ICartItemService cartItemService,
+    IOrderService orderService,
     IMapper mapper,
     ILogger<UserService> logger) : IUserService
 {
     private readonly IMemoryCache _memoryCache = memoryCache;
     private readonly IUserRepository _userRepository = userRepository;
+    private readonly ICartItemService _cartItemService = cartItemService;
+    private readonly IOrderService _orderService = orderService;
     private readonly IMapper _mapper = mapper;
     private readonly ILogger<UserService> _logger = logger;
     private const string CacheKey = "AllUsers_{0}_{1}";
@@ -129,5 +137,57 @@ public class UserService
         // Xóa cache liên quan
         _memoryCache.Remove(string.Format(UserCacheKey, userId));
         _logger.LogInformation("User with ID {UserId} updated their information successfully.", userId);
+    }
+
+    public async Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId, UpdateOrderUserInforRequest request)
+    {
+        //using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            // Cập nhật thông tin người dùng
+            var user = await _userRepository.GetByIdAsync(userId) ?? throw new KeyNotFoundException($"User with ID {userId} not found.");
+            user.FullName = request.FullName ?? user.FullName;
+            //user.Email = request.Email ?? user.Email;
+            user.PhoneNumber = request.PhoneNumber ?? user.PhoneNumber;
+            user.Address = request.Address ?? user.Address;
+
+            await _userRepository.UpdateAsync(user);
+
+            // Lấy giỏ hàng của người dùng
+            var cartItems = (await _cartItemService.GetCartItemsByUserIdAsync(userId, 0, int.MaxValue)).CartItems;
+            if (!cartItems.Any())
+                throw new InvalidOperationException("Cart is empty. Cannot create an order.");
+
+            // Tạo yêu cầu tạo đơn hàng
+            var createOrderRequest = new CreateOrderRequest
+            {
+                UserId = userId,
+                ShippingAddress = user.Address ?? throw new InvalidOperationException("User address is required to create an order."),
+                Items = cartItems.Select(ci => new OrderItemDto // Changed CreateOrderItemRequest to OrderItemDto
+                {
+                    ProductId = ci.ProductId,
+                    Quantity = ci.Quantity,
+                    // Assuming you have Price and OrderItemId available in CartItemDto or need to fetch them
+                    // For now, setting them to default values or you might need to adjust this based on your CartItemDto structure
+                    Price = ci.Price, // Assuming Price exists in CartItemDto
+                    OrderItemId = Guid.NewGuid() // Generate a new GUID or get from CartItemDto if it exists
+                }).ToList()
+            };
+
+            // Tạo đơn hàng
+            var createdOrder = await _orderService.CreateOrderAsync(createOrderRequest);
+
+            // Xóa giỏ hàng
+            await _cartItemService.ClearCartAsync(userId);
+
+            // Commit transaction
+            //await transaction.CommitAsync();
+            return createdOrder;
+        }
+        catch
+        {
+            //await transaction.RollbackAsync();
+            throw;
+        }
     }
 }

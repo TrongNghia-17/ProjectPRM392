@@ -29,5 +29,4 @@ namespace BLL.DTOs.OdersDTO
         public DateTime OrderDate { get; set; }
         public List<OrderItemDto> Items { get; set; }
     }
-
 }

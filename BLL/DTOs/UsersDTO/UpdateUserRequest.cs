@@ -19,4 +19,6 @@ public class UpdateUserRequest
 
     [Required(ErrorMessage = "IsActive status is required")]
     public bool IsActive { get; set; }
+
+    public string? Address { get; set; }
 }
