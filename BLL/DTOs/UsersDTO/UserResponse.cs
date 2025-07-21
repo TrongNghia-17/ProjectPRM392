@@ -14,8 +14,8 @@ public class UserResponse
 public class PagedUserResponse
 {
     public IEnumerable<UserResponse> Users { get; set; } = null!;
-    public int TotalCount { get; set; }
-    public int PageIndex { get; set; }
-    public int PageSize { get; set; }
-    public int TotalPages { get; set; }
+    public int? TotalCount { get; set; }
+    public int? PageIndex { get; set; }
+    public int? PageSize { get; set; }
+    public int? TotalPages { get; set; }
 }

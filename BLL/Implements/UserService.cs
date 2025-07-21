@@ -21,36 +21,22 @@ public class UserService
     private const string CacheKey = "AllUsers_{0}_{1}";
     private const string UserCacheKey = "User_{0}";
 
-    public async Task<PagedUserResponse> GetAllUsersAsync(int pageIndex, int pageSize)
-    {
-        if (pageIndex < 0)
-            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
-        if (pageSize <= 0)
-            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
+    public async Task<List<UserResponse>> GetAllUsersAsync()
+    {       
+        //var cacheKey = string.Format(CacheKey, pageIndex, pageSize);
+        //var cachedResponse = _memoryCache.Get<PagedUserResponse>(cacheKey);
 
-        var cacheKey = string.Format(CacheKey, pageIndex, pageSize);
-        var cachedResponse = _memoryCache.Get<PagedUserResponse>(cacheKey);
+        //if (cachedResponse != null)
+        //{
+        //    return cachedResponse;
+        //}
 
-        if (cachedResponse != null)
-        {
-            return cachedResponse;
-        }
+        var users = await _userRepository.GetAllAsync();
+        var userResponses = _mapper.Map<List<UserResponse>>(users);
 
-        var (users, totalCount) = await _userRepository.GetAllAsync(pageIndex, pageSize);
-        var userResponses = _mapper.Map<IEnumerable<UserResponse>>(users);
+        //_memoryCache.Set(cacheKey, response, TimeSpan.FromMinutes(10));
 
-        var response = new PagedUserResponse
-        {
-            Users = userResponses,
-            TotalCount = totalCount,
-            PageIndex = pageIndex,
-            PageSize = pageSize,
-            TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
-        };
-
-        _memoryCache.Set(cacheKey, response, TimeSpan.FromMinutes(10));
-
-        return response;
+        return userResponses;
     }
 
     public async Task<UserResponse> GetUserByIdAsync(Guid id)

@@ -36,22 +36,10 @@ public class UserRepository(ElectronicStoreDbContext context) : IUserRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<(IEnumerable<User> Users, int TotalCount)> GetAllAsync(int pageIndex, int pageSize)
+    public async Task<List<User>> GetAllAsync()
     {
-        if (pageIndex < 0)
-            throw new ArgumentException("Page index cannot be negative.", nameof(pageIndex));
-        if (pageSize <= 0)
-            throw new ArgumentException("Page size must be greater than zero.", nameof(pageSize));
-
-        var query = _context.Users.AsNoTracking(); 
-
-        var totalCount = await query.CountAsync();
-        var users = await query
-            .Skip(pageIndex * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return (users, totalCount);
+        var users = await _context.Users.ToListAsync();   
+        return users;
     }
 
     public async Task DeleteAsync(User user)

@@ -4,7 +4,7 @@ namespace BLL.Interfaces;
 
 public interface IUserService
 {
-    Task<PagedUserResponse> GetAllUsersAsync(int pageIndex, int pageSize);
+    Task<List<UserResponse>> GetAllUsersAsync();
     Task<UserResponse> GetUserByIdAsync(Guid id);
     Task UpdateUserAsync(Guid id, UpdateUserRequest request);
     Task DeleteUserAsync(Guid id);

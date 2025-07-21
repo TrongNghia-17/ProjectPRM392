@@ -12,20 +12,12 @@ public class AdminsController(IUserService userService, ILogger<AuthsController>
 
     [HttpGet("users")]
     //[Authorize(Roles = "Admin")]
-    public async Task<IActionResult> GetAllUsers([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    public async Task<IActionResult> GetAllUsers()
     {
-        var response = await _userService.GetAllUsersAsync(pageIndex, pageSize);
+        var response = await _userService.GetAllUsersAsync();
         return Ok(new
         {
-            Status = "Success",
-            Data = response.Users,
-            Pagination = new
-            {
-                response.TotalCount,
-                response.PageIndex,
-                response.PageSize,
-                response.TotalPages
-            }
+            response
         });
     }
 
