@@ -56,6 +56,9 @@ public class AuthService(IUserRepository userRepository, IConfiguration configur
             UserId = Guid.NewGuid(),
             Email = request.Email,
             Password = hashedPassword,
+            FullName = request.FullName,
+            PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
             Role = "User",
             IsActive = true,
             CreatedAt = DateTime.UtcNow

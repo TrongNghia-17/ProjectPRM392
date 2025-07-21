@@ -165,7 +165,7 @@ public class UserService
             var createOrderRequest = new CreateOrderRequest
             {
                 UserId = userId,
-                ShippingAddress = user.Address ?? throw new InvalidOperationException("User address is required to create an order."),
+                ShippingAddress = user.Address,
                 Items = cartItems.Select(ci => new OrderItemDto // Changed CreateOrderItemRequest to OrderItemDto
                 {
                     ProductId = ci.ProductId,
