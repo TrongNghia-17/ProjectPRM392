@@ -75,7 +75,8 @@ public class CartItemRepository(ElectronicStoreDbContext context) : ICartItemRep
 
         var query = _context.CartItems
             .Where(ci => ci.UserId == userId)
-            .Include(ci => ci.Product); 
+            .Include(ci => ci.Product)
+            .OrderByDescending(x => x.AddedAt); 
 
         var totalCount = await query.CountAsync();
         var cartItems = await query

@@ -26,6 +26,7 @@
             return await _context.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
+            .OrderByDescending(o => o.OrderDate)
             .ToListAsync();
         }
 
@@ -35,6 +36,7 @@
                 .Where(o => o.UserId == userId)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
+                .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
         }
 
@@ -51,6 +53,7 @@
             return await _context.Orders
             .Include(o => o.OrderItems)
             .ThenInclude(oi => oi.Product)
+            .OrderByDescending(o => o.OrderDate)
             .FirstOrDefaultAsync(o => o.OrderId == orderId);
         }
 

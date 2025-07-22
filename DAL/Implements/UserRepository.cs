@@ -40,7 +40,10 @@ public class UserRepository(ElectronicStoreDbContext context) : IUserRepository
 
     public async Task<List<User>> GetAllAsync()
     {
-        var users = await _context.Users.ToListAsync();   
+        var users = await _context.
+            Users
+            .OrderByDescending(x => x.CreatedAt)
+            .ToListAsync();   
         return users;
     }
 

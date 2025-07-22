@@ -43,6 +43,7 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
         var result = await query
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
+            .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
         return (result, total);
@@ -81,6 +82,7 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
         var products = await query
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
+            .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
         return (products, totalCount);
@@ -145,6 +147,7 @@ public class ProductRepository(ElectronicStoreDbContext context) : IProductRepos
         var products = await query
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
+            .OrderByDescending(p => p.CreatedAt)
             .ToListAsync();
 
         return (products, totalCount);

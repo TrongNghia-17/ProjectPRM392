@@ -21,6 +21,7 @@ public class CategoryRepository(ElectronicStoreDbContext context) : ICategoryRep
         var categories = await query
             .Skip(pageIndex * pageSize)
             .Take(pageSize)
+            .OrderByDescending(c => c.CreatedAt)
             .ToListAsync();
 
         return (categories, totalCount);
@@ -28,7 +29,9 @@ public class CategoryRepository(ElectronicStoreDbContext context) : ICategoryRep
 
     public async Task<IEnumerable<Category>> GetAllAsync()
     {
-        return await _context.Categories.ToListAsync();
+        return await _context.Categories
+            .OrderByDescending(c => c.CreatedAt)
+            .ToListAsync();
     }
 
     public async Task<Category?> GetByIdAsync(Guid id)
