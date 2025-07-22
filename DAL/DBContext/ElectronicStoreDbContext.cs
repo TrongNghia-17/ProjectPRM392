@@ -64,7 +64,11 @@ public partial class ElectronicStoreDbContext : DbContext
             entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BCFA3C2CC9C");
 
             entity.Property(e => e.OrderId).ValueGeneratedNever();
-            entity.Property(e => e.OrderDate).HasColumnType("datetime");
+            entity.Property(e => e.OrderDate)
+          .HasColumnType("timestamp with time zone") // Hoặc "datetime" nếu DB của bạn không hỗ trợ "timestamp with time zone"
+          .HasConversion(
+              v => v.Kind == DateTimeKind.Utc ? v : v.ToUniversalTime(),
+              v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
             entity.Property(e => e.ShippingAddress).HasMaxLength(500);
             entity.Property(e => e.Status).HasMaxLength(50);
             entity.Property(e => e.Total).HasColumnType("decimal(18, 2)");
