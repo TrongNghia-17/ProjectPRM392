@@ -6,6 +6,8 @@ public partial class CartItem
 
     public Guid UserId { get; set; }
 
+    public string? ImageUrl { get; set; }
+
     public Guid ProductId { get; set; }
 
     public int Quantity { get; set; }

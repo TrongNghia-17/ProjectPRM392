@@ -44,6 +44,7 @@ public class CartItemService
             var cartItem = new CartItem
             {
                 CartItemId = Guid.NewGuid(),
+                
                 UserId = userId,
                 ProductId = productId,
                 Quantity = quantity,
