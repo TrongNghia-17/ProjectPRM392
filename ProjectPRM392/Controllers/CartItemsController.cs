@@ -7,10 +7,18 @@ public class CartItemsController(ICartItemService cartItemService) : ControllerB
     private readonly ICartItemService _cartItemService = cartItemService;
 
     [HttpPost("{productId}/add-to-cart")]
-    public async Task<IActionResult> Add(Guid productId, [FromQuery] Guid userId, [FromQuery] int quantity)
+    public async Task<IActionResult> Add(Guid productId, [FromQuery] int quantity)
     {
         try
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+               ?? throw new UnauthorizedAccessException("Invalid user token.");
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                throw new UnauthorizedAccessException("Invalid user token.");
+            }
+
             await _cartItemService.AddAsync(userId, productId, quantity);
             return Ok(new { Message = $"Product {productId} added to cart for user {userId} successfully.", Status = "Success" });
         }
@@ -50,11 +58,19 @@ public class CartItemsController(ICartItemService cartItemService) : ControllerB
         }
     }
 
-    [HttpGet("cart/{userId}")]
-    public async Task<IActionResult> GetCartItemsByUserId(Guid userId, [FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
+    [HttpGet("cart-of-user")]
+    public async Task<IActionResult> GetCartItemsByUserId([FromQuery] int pageIndex = 0, [FromQuery] int pageSize = 3)
     {
         try
         {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
+               ?? throw new UnauthorizedAccessException("Invalid user token.");
+            if (!Guid.TryParse(userIdClaim, out var userId))
+            {
+                //_logger.LogWarning("Invalid UserId format in token: {UserIdClaim}", userIdClaim);
+                throw new UnauthorizedAccessException("Invalid user token.");
+            }
+
             var result = await _cartItemService.GetCartItemsByUserIdAsync(userId, pageIndex, pageSize);
             return Ok(new
             {

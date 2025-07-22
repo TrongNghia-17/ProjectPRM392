@@ -127,7 +127,7 @@ public class UserService
         _logger.LogInformation("User with ID {UserId} updated their information successfully.", userId);
     }
 
-    public async Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId)
+    public async Task<OrderResponseDto> CreateOrderAsync(Guid userId)
     {
         //using var transaction = await _context.Database.BeginTransactionAsync();
         try

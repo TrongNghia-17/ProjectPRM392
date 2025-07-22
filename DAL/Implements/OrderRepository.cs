@@ -18,6 +18,7 @@
         public async Task AddOrderAsync(Order order)
         {
             await _context.Orders.AddAsync(order);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<Order>> GetAllOrdersAsync()

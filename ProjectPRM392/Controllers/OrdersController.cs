@@ -44,7 +44,7 @@ namespace ProjectPRM392.Controllers
                 //    return Unauthorized(new { Status = "Error", Message = "Invalid user token." });
                 //}
 
-                var createdOrder = await _userService.UpdateUserAndCreateOrderAsync(userId);
+                var createdOrder = await _userService.CreateOrderAsync(userId);
                 return Ok(new { Message = "Order created, and cart cleared successfully.", Status = "Success" });
             }
             catch (Exception ex)

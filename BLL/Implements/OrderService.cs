@@ -58,7 +58,7 @@ namespace BLL.Implements
                 UserId = request.UserId,
                 OrderDate = DateTime.Now,
                 ShippingAddress = request.ShippingAddress,
-                Status = "Chưa thanh toán",
+                Status = "Đã thanh toán",
                 Total = 0,
                 OrderItems = new List<OrderItem>()
             };
@@ -83,7 +83,7 @@ namespace BLL.Implements
 
                 order.Total += product.Price * item.Quantity;
 
-                //product.Quantity -= item.Quantity;
+                product.Quantity -= item.Quantity;
 
                 order.OrderItems.Add(orderItem);
             }

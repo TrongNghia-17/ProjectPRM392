@@ -9,5 +9,5 @@ public interface IUserService
     Task<User> UpdateUserAsync(Guid id, UpdateUserRequest request);
     Task DeleteUserAsync(Guid id);
     Task SelfUpdateUserAsync(Guid userId, SelfUpdateUserRequest request);
-    Task<OrderResponseDto> UpdateUserAndCreateOrderAsync(Guid userId);
+    Task<OrderResponseDto> CreateOrderAsync(Guid userId);
 }
