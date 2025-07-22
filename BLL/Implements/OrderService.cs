@@ -56,7 +56,7 @@ namespace BLL.Implements
             {
                 OrderId = Guid.NewGuid(),
                 UserId = request.UserId,
-                OrderDate = DateTime.Now,
+                OrderDate = DateTime.UtcNow,
                 ShippingAddress = request.ShippingAddress,
                 Status = "Đã thanh toán",
                 Total = 0,
